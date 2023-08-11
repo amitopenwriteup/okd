@@ -1,0 +1,27 @@
+
+In order to set up enterprise OpenShift, each participant needs active redhat account
+
+Both the vms need internet access
+
+Two vms
+
+Master machine
+
+At least Linux rhel 8 or rhel 9 with the required packages on that instance.
+
+4 CPU core.
+
+At least 8 GB RAM.
+
+70 GB of internal hard disk memory.
+
+
+Node machine
+
+At least Linux rhel 8 on the machine.
+Docker installed with not below than 1.6 version.
+2 CPU core.
+8 GB RAM.
+40 GB hard disk 
+
+Need windows vm to access the enviornment

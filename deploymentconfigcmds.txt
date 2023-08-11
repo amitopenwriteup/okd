@@ -1,0 +1,68 @@
+In OpenShift, you can interact with DeploymentConfigs using the `oc` command-line tool. Here are some commonly used commands to manage DeploymentConfigs:
+
+1. **Create a DeploymentConfig:**
+
+   To create a new DeploymentConfig, you can use the `oc create deploymentconfig` command. For example:
+
+   
+   oc create deploymentconfig my-app --image=my-docker-imagestream:1.14.1
+   
+
+2. **Update a DeploymentConfig:**
+
+   You can update a DeploymentConfig's properties, such as the number of replicas or the image version, using the `oc patch` command:
+
+   
+   oc patch dc/my-app -p '{"spec":{"replicas":3}}'
+   
+
+3. **Scale Up or Down:**
+
+   You can scale the number of replicas up or down using the `oc scale` command:
+
+   
+   oc scale dc/my-app --replicas=5
+   
+
+4. **Rollout History and Status:**
+
+   To view the rollout history and status of a DeploymentConfig, you can use:
+
+   
+   oc rollout history dc/my-app
+   oc rollout status dc/my-app
+   
+
+5. **Trigger a New Deployment:**
+
+   To trigger a new deployment (rolling update) manually, you can use:
+
+   
+   oc rollout latest dc/my-app
+   
+
+6. **Pause and Resume Rollouts:**
+
+   You can pause and resume rollouts using the following commands:
+
+   
+   oc rollout pause dc/my-app
+   oc rollout resume dc/my-app
+   
+
+7. **Delete a DeploymentConfig:**
+
+   To delete a DeploymentConfig and associated resources, you can use:
+
+   
+   oc delete dc/my-app
+   
+
+8. **Exposing Services:**
+
+   After creating a DeploymentConfig, you might want to expose it as a service to make it accessible. You can create a service associated with your DeploymentConfig using the `oc expose` command:
+
+   
+   oc expose dc/my-app --port=80
+   
+

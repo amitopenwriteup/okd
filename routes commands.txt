@@ -1,0 +1,55 @@
+In OpenShift, you can create and manage routes using the `oc` command-line interface. Here are some commonly used command-line options for working with routes:
+
+1. **Creating a Route:**
+   To create a route for a service, you can use the `oc expose` command followed by the service name. You can also specify additional options like hostname and path.
+
+bash
+   oc expose service <service-name> --name=<route-name> --hostname=<hostname> --path=<path>
+
+
+   For example:
+bash
+   oc expose service my-service --name=my-route --hostname=myapp.oc.com --path=/app
+
+
+2. **Listing Routes:**
+   To list all routes in a project, use the `oc get routes` command:
+
+bash
+   oc get routes
+
+
+3. **Deleting a Route:**
+   To delete a route, use the `oc delete route` command followed by the route name:
+
+bash
+   oc delete route <route-name>
+
+
+4. **Updating a Route:**
+   To update a route's hostname or path, you can use the `oc patch route` command along with the `--patch` option and a JSON or YAML configuration.
+
+bash
+   oc patch route <route-name> --patch '{"spec": {"host": "new-hostname"}}'
+
+
+5. **Redirection:**
+   You can configure a route to redirect incoming requests to another URL using the `--redirection` option. For example:
+
+bash
+   oc expose service my-service --name=my-route --hostname=myapp.example.com --redirection="https://new-url.example.com"
+
+
+6. **Creating a Wildcard Route:**
+   To create a wildcard route, use an asterisk (*) as the hostname:
+
+bash
+   oc expose service my-service --name=my-wildcard-route --hostname="*.example.com"
+
+
+7. **Route Annotations:**
+   You can add annotations to routes using the `--annotations` option:
+
+bash
+   oc expose service my-service --name=my-route --annotations="key1=value1,key2=value2"
+

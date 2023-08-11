@@ -1,0 +1,26 @@
+postgresql-persistent
+  Project: openshift
+  PostgreSQL database service, with persistent storage. For more information about using this template, including OpenShift considerations, see https://github.com/sclorg/postgresql-container/.
+
+NOTE: Scaling to more than one replica is not supported. You must have persistent volumes available in your cluster to use this template.
+nodejs-mongo-persistent
+  Project: openshift
+  An example Node.js application with a MongoDB database. For more information about using this template, including OpenShift considerations, see https://github.com/sclorg/nodejs-ex/blob/master/README.md.
+mysql-persistent
+  Project: openshift
+  MySQL database service, with persistent storage. For more information about using this template, including OpenShift considerations, see https://github.com/sclorg/mysql-container/blob/master/5.7/root/usr/share/container-scripts/mysql/README.md.
+
+NOTE: Scaling to more than one replica is not supported. You must have persistent volumes available in your cluster to use this template.
+cakephp-mysql-persistent
+  Project: openshift
+  An example CakePHP application with a MySQL database. For more information about using this template, including OpenShift considerations, see https://github.com/sclorg/cakephp-ex/blob/master/README.md.
+dancer-mysql-persistent
+  Project: openshift
+  An example Dancer application with a MySQL database. For more information about using this template, including OpenShift considerations, see https://github.com/openshift/dancer-ex/blob/master/README.md.
+django-psql-persistent
+  Project: openshift
+  An example Django application with a PostgreSQL database. For more information about using this template, including OpenShift considerations, see https://github.com/sclorg/django-ex/blob/master/README.md.
+jenkins-ephemeral
+  Project: openshift
+  Jenkins service, without persistent storage.
+

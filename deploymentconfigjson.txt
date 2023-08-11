@@ -1,0 +1,60 @@
+Json file
+
+{
+  "apiVersion": "apps.openshift.io/v1",
+  "kind": "DeploymentConfig",
+  "metadata": {
+    "name": "my-deployment-config"
+  },
+  "spec": {
+    "replicas": 3,
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "my-app"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "name": "my-container",
+            "image": "my-docker-imagestream:1.14.1"
+          }
+        ]
+      }
+    },
+    "triggers": [
+      {
+        "type": "ConfigChange"
+      },
+      {
+        "type": "ImageChange",
+        "imageChangeParams": {
+          "automatic": true,
+          "containerNames": ["my-container"],
+          "from": {
+            "kind": "ImageStreamTag",
+            "name": "my-docker-imagestream:1.14.1"
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
+In this example:
+
+- `"my-deployment-config"` should be replaced with your desired DeploymentConfig name.
+- `"my-docker-imagestream:1.14.1"` should match the name and tag of the ImageStream you created previously.
+- The `"replicas"` field indicates the desired number of replicas for your application.
+- The `"triggers"` section specifies the triggers for the DeploymentConfig:
+  - The `"ConfigChange"` trigger is set to respond to changes in the DeploymentConfig's configuration.
+  - The `"ImageChange"` trigger is set to automatically respond to changes in the referenced image (from the ImageStream) and update the application.
+
+To apply this JSON configuration and create the DeploymentConfig, you can use the `oc create` command:
+
+```bash
+oc create -f deploymentconfig.json
+```
+

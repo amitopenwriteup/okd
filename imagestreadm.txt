@@ -1,0 +1,1 @@
+https://github.com/openshift/origin/blob/master/examples/image-streams/image-streams-centos7.json

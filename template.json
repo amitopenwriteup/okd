@@ -1,0 +1,100 @@
+{
+  "apiVersion": "template.openshift.io/v1",
+  "kind": "Template",
+  "metadata": {
+    "name": "mysql-template"
+  },
+  "objects": [
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+        "name": "mysql",
+        "labels": {
+          "app": "mysql"
+        }
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "mysql",
+            "port": 3306
+          }
+        ],
+        "selector": {
+          "app": "mysql"
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "PersistentVolumeClaim",
+      "metadata": {
+        "name": "mysql-pv-claim"
+      },
+      "spec": {
+        "accessModes": [
+          "ReadWriteOnce"
+        ],
+        "resources": {
+          "requests": {
+            "storage": "1Gi"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "DeploymentConfig",
+      "metadata": {
+        "name": "mysql"
+      },
+      "spec": {
+        "replicas": 1,
+        "selector": {
+          "app": "mysql"
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "app": "mysql"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "mysql",
+                "image": "mysql:latest",
+                "env": [
+                  {
+                    "name": "MYSQL_ROOT_PASSWORD",
+                    "value": "rootpassword"
+                  }
+                ],
+                "ports": [
+                  {
+                    "containerPort": 3306
+                  }
+                ],
+                "volumeMounts": [
+                  {
+                    "name": "mysql-persistent-storage",
+                    "mountPath": "/var/lib/mysql"
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "mysql-persistent-storage",
+                "persistentVolumeClaim": {
+                  "claimName": "mysql-pv-claim"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

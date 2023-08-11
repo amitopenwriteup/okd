@@ -1,0 +1,47 @@
+create imagestream yaml file
+
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: my-docker-imagestream
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: docker.io/amitow/nginx:1.14.1
+
+
+
+ oc create -f is.yaml
+  oc get is
+  
+oc describe is my-docker-imagestream
+
+Json format: [Upload to okd dashboard]
+
+{
+  "apiVersion": "image.openshift.io/v1",
+  "kind": "ImageStream",
+  "metadata": {
+    "name": "my-docker-imagestream"
+  },
+  "spec": {
+    "lookupPolicy": {
+      "local": false
+    },
+    "tags": [
+      {
+        "name": "1.14.1",
+        "from": {
+          "kind": "DockerImage",
+          "name": "docker.io/amitow/nginx:1.14.1"
+        }
+      }
+    ]
+  }
+}
+
+
