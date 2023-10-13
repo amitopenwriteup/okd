@@ -4,8 +4,8 @@ yum install git
 
 docker pull centos/nodejs-8-centos7
 
-  # Create a NodeJS build config based on the provided [image]~[source code] combination
-  oc new-build centos/nodejs-8-centos7~https://github.com/sclorg/nodejs-ex.git
+oc new-build centos/nodejs-8-centos7~https://github.com/amitopenwriteup/nodejs-ex.git
+
   oc get buildconfig
   oc start-build nodejs-ex
    oc logs build.build.openshift.io/nodejs-ex-2
