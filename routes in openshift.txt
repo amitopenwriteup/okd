@@ -1,0 +1,252 @@
+Routes.yaml
+
+dep.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: amitow/nginx:v1
+        ports:
+        - containerPort: 80
+
+svc.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service-rc
+spec:
+  selector:
+    app: nginx
+  ports:
+  - name: name-of-service-port
+    protocol: TCP
+    port: 80
+    targetPort: 8080
+
+route.yaml
+
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: test
+  namespace: amitmworld-dev
+  labels: {}
+spec:
+  to:
+    kind: Service
+    name: nginx-service-rc
+  tls: null
+  port:
+    targetPort: 8080
+
+oc get route
+curl <routename>
+
+Split traffic
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx1
+  template:
+    metadata:
+      labels:
+        app: nginx1
+    spec:
+      containers:
+      - name: nginx
+        image: amitow/nginx:v2
+        ports:
+        - containerPort: 80
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment1
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: amitow/nginx:v1
+        ports:
+        - containerPort: 80
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service-rc
+spec:
+  selector:
+    app: nginx
+  ports:
+  - name: name-of-service-port
+    protocol: TCP
+    port: 80
+    targetPort: 8080
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service-rc1
+spec:
+  selector:
+    app: nginx1
+  ports:
+  - name: name-of-service-port
+    protocol: TCP
+    port: 80
+    targetPort: 8080
+
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: test1
+  namespace: amitmworld-dev
+  labels: {}
+spec:
+  to:
+    kind: Service
+    name: nginx-service-rc1
+    weight: 50
+  tls: null
+  host: www.ow.com
+  port:
+    targetPort: 9376
+  alternateBackends:
+    - weight: 100
+      kind: Service
+      name: nginx-service-rc
+
+--------------------------------------------
+
+Edge route
+
+Obtain the CA certificate from the destination server. This is the certificate of the entity that issued the server's certificate.
+
+openssl s_client -connect your.destination.server:443 | openssl x509 -outform PEM > destination_ca_certificate.pem
+
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: test
+  namespace: amitmworld-dev
+  labels: {}
+spec:
+  to:
+    kind: Service
+    name: example
+    weight: 50
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+    destinationCACertificate: ''
+  host: www.ow.com
+  port:
+    targetPort: 9376
+  alternateBackends:
+    - weight: 100
+      kind: Service
+      name: example1
+-------------------------------------------------
+
+Passthrough
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout www.ow.com.key -out www.ow.com.crt
+openssl req -new -key www.ow.com.key -out www.ow.com.csr
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ca.key -out ca.crt
+
+certificate: /path/to/www.ow.com.crt
+  key: /path/to/www.ow.com.key
+  caCertificate: /path/to/ca.crt
+  destinationCACertificate: /path/to/destination_ca.crt
+
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: test
+  namespace: amitmworld-dev
+  labels: {}
+spec:
+  to:
+    kind: Service
+    name: example
+    weight: 50
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: Redirect
+    certificate: ''
+    key: ''
+    caCertificate: ''
+    destinationCACertificate: ''
+  host: www.ow.com
+  port:
+    targetPort: 9376
+  alternateBackends:
+    - weight: 100
+      kind: Service
+      name: example1
+---------------------------
+
+Re-encrpt
+
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: test
+  namespace: amitmworld-dev
+  labels: {}
+spec:
+  to:
+    kind: Service
+    name: example
+    weight: 50
+  tls:
+    termination: reencrypt
+    insecureEdgeTerminationPolicy: Redirect
+    certificate: ''
+    key: ''
+    caCertificate: ''
+    destinationCACertificate: ''
+  host: www.ow.com
+  port:
+    targetPort: 9376
+  alternateBackends:
+    - weight: 100
+      kind: Service
+      name: example1
+---------------------------
+
