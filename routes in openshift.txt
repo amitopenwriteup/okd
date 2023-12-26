@@ -223,10 +223,9 @@ spec:
 
 Re-encrpt
 
-kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: test
+  name: test-reencrypt
   namespace: amitmworld-dev
   labels: {}
 spec:
@@ -237,10 +236,10 @@ spec:
   tls:
     termination: reencrypt
     insecureEdgeTerminationPolicy: Redirect
-    certificate: ''
-    key: ''
-    caCertificate: ''
-    destinationCACertificate: ''
+    certificate: '/home/user/www.ow.com.crt'
+    key: '/home/user/www.ow.com.key'
+    caCertificate: '/home/user/ca.crt'
+    destinationCACertificate: '/home/user/ca.crt'
   host: www.ow.com
   port:
     targetPort: 9376
@@ -248,5 +247,3 @@ spec:
     - weight: 100
       kind: Service
       name: example1
----------------------------
-
