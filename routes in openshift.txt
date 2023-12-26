@@ -192,7 +192,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ca.key -out ca.crt
 certificate: /path/to/www.ow.com.crt
   key: /path/to/www.ow.com.key
   caCertificate: /path/to/ca.crt
-  destinationCACertificate: /path/to/destination_ca.crt
+  
 
 kind: Route
 apiVersion: route.openshift.io/v1
