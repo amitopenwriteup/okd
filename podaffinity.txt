@@ -1,0 +1,29 @@
+  kubectl create -f podaffnity.yaml
+  kubectl describe pod/pod-with-pod-affinity
+  vi podaff.yaml
+  kubectl create -f podaff.yaml
+ kubectl describe pod/pod-with-pod-affinity
+
+Test anti affinity
+
+kubectl create -f podantiaff.yaml
+kubectl describe pod/antiaffinitypod
+
+Now create pod with anti affinity
+
+kubectl create -f podantiaffinity.yaml
+kubectl describe  pod/pod-with-pod-anti-affinity
+
+
+Node affinity
+
+ kubectl describe pod/with-node-affinity
+ cat nodeaffinity.yaml
+ kubectl describe pod/with-node-affinity
+ kubectl delete pod/with-node-affinity
+ vi with-affinity-antiaffinity.yaml
+ kubectl create -f with-affinity-antiaffinity.yaml
+ kubectl describe pod/with-affinity-anti-affinity
+ vi with-affinity-antiaffinity.yaml
+ kubectl describe pod/with-affinity-anti-affinity
+ kubectl delete pod/with-affinity-anti-affinity

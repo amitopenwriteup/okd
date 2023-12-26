@@ -1,0 +1,44 @@
+with-node-affinity
+
+kubectl get nodes --show-labels
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: with-node-affinity
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - okdmaster
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: another-node-label-key
+            operator: In
+            values:
+            - another-node-label-value
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - okdclient
+  containers:
+  - name: with-node-affinity
+    image: k8s.gcr.io/pause:2.0
+-----------------------------------------------------
+
+
+
+requiredDuringSchedulingIgnoredDuringExecution: Specifies that the Pod must be scheduled on nodes that satisfy the specified nodeSelectorTerms during scheduling. In this case, it requires that the node's hostname is "okdmaster."
+
+preferredDuringSchedulingIgnoredDuringExecution: Specifies that the Pod prefers to be scheduled on nodes that satisfy the specified nodeSelectorTerms, but it's not mandatory. In this case, it prefers nodes with a certain label (another-node-label-key: another-node-label-value) and a specific hostname ("okdclient"). The weight is set to 1.
+
+The node affinity rule is specified as a preference, and it has a weight of 1. This means that the Pod prefers to be scheduled on nodes that match the specified criteria (nodes with the label "another-node-label-key: another-node-label-value" and hostname "okdclient"), but it's not a strict requirement. If multiple nodes meet the criteria, the scheduler will take the weight into account, and the node with a higher weight will be preferred over nodes with a lower weight. If no nodes meet the criteria, the scheduler will still attempt to place the Pod on any available node.
+
+In summary, the weight provides a way to express a relative preference when there are multiple node affinity rules or when there are multiple nodes that satisfy the criteria of a single rule.	

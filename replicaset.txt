@@ -1,0 +1,23 @@
+kubectl create -f replicasetmatchlabel.yaml
+kubectl describe replicaset.apps/my-replicaset
+kubectl delete replicaset.apps/my-replicaset
+
+matchexpression
+
+ kubectl create -f matchexpressionset.yaml
+ kubectl describe replicaset.apps/my-replicaiset1
+
+Try to create one pod with same label
+
+ kubectl create -f replicasetpod.yaml
+
+
+Delete the pod
+
+kubectl delete replicaset.apps/my-replicaiset1
+kubectl create -f replicasetpod.yaml
+kubectl create -f matchexpressionset.yaml
+kubectl describe replicaset.apps/my-replicaiset1
+
+
+

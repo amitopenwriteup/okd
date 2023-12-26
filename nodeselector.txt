@@ -1,22 +1,11 @@
-In Kubernetes, Node Selector is a way to schedule pods onto specific nodes based on labels assigned to the nodes. 
-It allows you to control where pods should be placed in the cluster based on node attributes.
 
-Here's how you can use Node Selector to schedule pods onto specific nodes:
-
-Step 1: Add labels to the nodes
-First, you need to assign labels to the nodes in your Kubernetes cluster. 
-For example, let's say you want to label a node with the key-value pair `app=backend`:
-
-```bash
 kubectl label nodes <node-name> app=backend
-```
 
-Replace `<node-name>` with the name of the node you want to label.
+kubectl label nodes okdclient app=backend
 
-Step 2: Define the Node Selector in the pod specification
-Next, you need to define the Node Selector in the pod specification to indicate which nodes the pod should be scheduled on. Here's an example:
+kubectl describe node okdclient
 
-```yaml
+
 apiVersion: v1
 kind: Pod
 metadata:
@@ -24,23 +13,10 @@ metadata:
 spec:
   containers:
     - name: my-container
-      image: my-image
+      image: amitow/nginx:v2
   nodeSelector:
     app: backend
-```
 
-In the above example, the `nodeSelector` field specifies that the pod should be scheduled on a node with the label `app=backend`.
 
-Step 3: Create the pod
-Save the above YAML manifest in a file, such as `pod.yaml`, and create the pod using the `kubectl` command:
-
-```bash
-kubectl apply -f pod.yaml
-```
-
-Kubernetes will attempt to schedule the pod on a node that matches the specified Node Selector.
- If no node with the matching label is available, the pod will remain in the pending state until a suitable node becomes available.
-
-Note: Node Selector is just one way to schedule pods in Kubernetes. 
-There are other advanced scheduling techniques available, such as Node Affinity, 
-Node Taints, and Tolerations, which provide more fine-grained control over pod placement in the cluster.
+kubectl create -f nodeselector.yaml
+kubectl describe pods my-pod
