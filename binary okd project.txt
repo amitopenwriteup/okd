@@ -1,0 +1,43 @@
+1) Created an image stream: (test.yaml)
+
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: my-docker-imagestream-jboss
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: docker.io/freebirdie/jboss-webserver31-tomcat8-openshift:latest
+
+2) oc create -f test.yaml
+
+3) Setup a war file directory
+
+Create project & folder structure
+
+oc new-project binarydeploy
+mkdir binarytest && cd binarytest
+mkdir deployments
+
+4) In case want to create war sample file
+
+git clone https://github.com/boxfuse/boxfuse-sample-java-war-hello
+cd boxfuse-sample-java-war-hello
+mvn package
+boxfuse run target/hello-1.0.war
+
+5) cp target/hello-1.0.war binarytest/deployments/ROOT.war
+
+6) create buildconfig
+
+oc new-build default-route-openshift-image-registry.apps-crc.testing/binarydeploy/my-docker-imagestream-jboss --binary=true --name=myapp --allow-missing-images
+
+cd binarytest/deployments
+
+oc start-build myapp --from-dir=.
+
+
