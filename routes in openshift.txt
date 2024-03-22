@@ -4,7 +4,7 @@ dep.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: nginx-deployment2
   labels:
     app: nginx
 spec:
@@ -107,7 +107,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-service-rc
+  name: nginx-service-rc3
 spec:
   selector:
     app: nginx
@@ -121,7 +121,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-service-rc1
+  name: nginx-service-rc4
 spec:
   selector:
     app: nginx1
@@ -140,7 +140,7 @@ metadata:
 spec:
   to:
     kind: Service
-    name: nginx-service-rc1
+    name: nginx-service-rc3
     weight: 50
   tls: null
   host: www.ow.com
@@ -149,7 +149,7 @@ spec:
   alternateBackends:
     - weight: 100
       kind: Service
-      name: nginx-service-rc
+      name: nginx-service-rc4
 
 --------------------------------------------
 
