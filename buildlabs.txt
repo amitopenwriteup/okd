@@ -18,8 +18,6 @@ yum install git
   # Create a build config from a remote repository and add custom environment variables
   oc new-build https://github.com/openshift/ruby-hello-world -e RACK_ENV=development
 
-  # Create a build config from a remote private repository and specify which existing secret to use
-  oc new-build https://github.com/youruser/yourgitrepo --source-secret=yoursecret
 
   # Create a build config from a remote repository and inject the npmrc into a build
   oc new-build https://github.com/openshift/ruby-hello-world --build-secret npmrc:.npmrc
