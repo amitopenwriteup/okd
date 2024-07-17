@@ -1,0 +1,25 @@
+Here's an example of an egress YAML file in Kubernetes, which defines network policies for outbound traffic from pods:
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress
+spec:
+  podSelector: {}
+  policy Types:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 192.168.1.0/24
+    ports:
+    - protocol: TCP
+      port: 80
+    - protocol: UDP
+      port: 53
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          project: amitproj

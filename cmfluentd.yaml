@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-config
+data:
+  fluentd.conf: |
+    # Your Fluentd configuration here
+    <source>
+      @type forward
+      port 24224
+    </source>
+
+    <match **>
+      @type stdout
+    </match>

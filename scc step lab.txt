@@ -1,0 +1,122 @@
+create service account
+
+oc apply -f - <<EOF
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: amit-sa
+  namespace: amitproj
+EOF
+
+
+kubectl get serviceaccounts/build-robot -o yaml
+
+Manually create a service account API token
+
+oc apply -f - <<EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: amit-sa-secret
+  namespace: amitproj
+  annotations:
+    kubernetes.io/service-account.name: amit-sa
+type: kubernetes.io/service-account-token
+EOF
+
+
+kubectl describe secrets/build-robot-secret
+
+
+Map the SA to pod
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-1
+  namespace: amitproj
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    volumeMounts:
+    - mountPath: /var/run/secrets/tokens
+      name: vault-token
+  serviceAccountName: amit-sa
+  volumes:
+  - name: vault-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          path: vault-token
+          expirationSeconds: 7200
+          audience: vault
+
+
+
+----------------------------------------------------
+1. Create a YAML file (restricted-scc.yaml) for the SCC definition:
+
+#Select your project for example my service project name: amitproj and service account: default
+
+   apiVersion: security.openshift.io/v1
+   kind: SecurityContextConstraints
+   metadata:
+     name: restricted-scc
+     namespace: amitproj
+   allowHostDirVolumePlugin: false
+   allowHostIPC: false
+   allowHostNetwork: false
+   allowHostPID: false
+   allowHostPorts: false
+   allowPrivilegeEscalation: false
+   allowPrivilegedContainer: false
+   allowedCapabilities:
+   - SETPCAP
+   - AUDIT_WRITE
+   - CHOWN
+   readOnlyRootFilesystem: false
+   runAsUser:
+     type: MustRunAsRange
+   seLinuxContext:
+     type: MustRunAs
+   supplementalGroups:
+     type: MustRunAs
+   users:
+   - system:serviceaccount:amitproj:amit-sa
+   groups:
+   - system:serviceaccounts:amitproj:amit-sa
+  
+   - Replace <namespace> and <serviceaccount> with the appropriate namespace and service account you want to apply this SCC to.
+
+2. Save this file (restricted-scc.yaml).
+
+ Step 2: Apply the SCC to OpenShift
+
+1. Apply the SCC definition to your OpenShift cluster:
+
+   
+   oc apply -f restricted-scc.yaml
+   
+
+   This command creates the SCC named restricted-scc with the specified settings.
+
+ Step 3: Verify the SCC Creation
+
+1. Verify that the SCC has been created successfully:
+
+   
+   oc get scc restricted-scc -o yaml
+   
+
+   Ensure that the output matches the settings you defined in your restricted-scc.yaml file.
+
+ Step 4: Apply SCC to a Service Account
+
+1. Apply the SCC to a specific service account in your project/namespace:
+
+   
+   oc adm policy add-scc-to-user restricted-scc system:serviceaccount:<namespace>:<serviceaccount>
+   
+
+   Replace <namespace> and <serviceaccount> with the appropriate namespace and service account name you specified in your restricted-scc.yaml file

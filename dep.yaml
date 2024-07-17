@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: samplelog
+  labels:
+    purpose: sample
+spec:
+  selector:
+    matchLabels:
+      app: samplelog
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: samplelog
+    spec:
+      containers:
+        - name: samplelog
+          image: jtarte/logsample:latest
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 8080
+          env:
+            - name: LOG
+              value: DEBUG
+            - name: LOGFILE
+              value: /var/app/samplelog.log
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: samplelog
+  labels:
+    app: samplelog
+spec:
+  ports:
+   - port: 80
+     name: http
+     targetPort: 8080
+  selector:
+   app: samplelog
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: samplelog
+  namespace: logsample
+  labels:
+    app: samplelog
+  annotations:
+    openshift.io/host.generated: 'true'
+spec:
+  to:
+    kind: Service
+    name: samplelog
+    weight: 100
+  port:
+    targetPort: http
+  wildcardPolicy: None
